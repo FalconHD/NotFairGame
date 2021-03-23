@@ -1,22 +1,22 @@
 const express = require('express');
-const RoomModel = require('../models/room');
+const { QModel } = require('../models/Question');
 const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
 
-const CreateRoom = router.post('/Create', verifyToken, async (req, res) => {
+
+
+const CreateQuestion = router.post('/Create', verifyToken, async (req, res) => {
     jwt.verify(req.token, 'secretkey', async (err, authData) => {
         if (err) {
-
-
             res.status(403).json({
                 message: "Authentication failed try to login "
             })
 
         } else {
-            const Room = req.body;
-            RoomModel.create(Room).then((result) => {
+            const Question = req.body;
+            QModel.create(Group).then((result) => {
                 // res.sendStatus(200)
                 res.status(200).json(
                     result
@@ -32,7 +32,8 @@ const CreateRoom = router.post('/Create', verifyToken, async (req, res) => {
 
 })
 
-const UpdateRoom = router.put('/Update/:id', verifyToken, async (req, res ,next) => {
+
+const UpdateQuestion = router.put('/Update/:id', verifyToken, async (req, res, next) => {
     jwt.verify(req.token, 'secretkey', async (err, authData) => {
         if (err) {
             res.status(403).json({
@@ -40,11 +41,11 @@ const UpdateRoom = router.put('/Update/:id', verifyToken, async (req, res ,next)
             })
 
         } else {
-            RoomModel.updateOne({_id : req.params.id}, req.body, { new: true }, (err, newRoomInfo) => {
+            QModel.updateOne({ _id: req.params.id }, req.body, { new: true }, (err, newGroup) => {
                 if (err) next(err)
                 res.status(200)
                 res.json({
-                    message : "✔ update succeeded ✔"
+                    message: "✔ update succeeded ✔"
                 })
             })
         }
@@ -54,7 +55,7 @@ const UpdateRoom = router.put('/Update/:id', verifyToken, async (req, res ,next)
 
 })
 
-const DeleteRoom = router.delete('/Delete/:id', verifyToken, async (req, res ,next) => {
+const DeleteQuestion = router.delete('/Delete/:id', verifyToken, async (req, res, next) => {
     jwt.verify(req.token, 'secretkey', async (err, authData) => {
         if (err) {
             res.status(403).json({
@@ -62,11 +63,11 @@ const DeleteRoom = router.delete('/Delete/:id', verifyToken, async (req, res ,ne
             })
 
         } else {
-            RoomModel.findByIdAndRemove({_id : req.params.id},  (err, deletedRomm) => {
+            QModel.findByIdAndRemove({ _id: req.params.id }, (err, DeleteGroup) => {
                 if (err) next(err)
                 res.status(200)
                 res.json({
-                    message : "🪓 Room Deleted 🧨"
+                    message: "🪓 Question Deleted 🧨"
                 })
             })
         }
@@ -77,23 +78,23 @@ const DeleteRoom = router.delete('/Delete/:id', verifyToken, async (req, res ,ne
 })
 
 
-const getAllrooms = router.get('/', verifyToken, (req, res, next) => {
+
+const getAllQuestions = router.get('/', verifyToken, (req, res, next) => {
 
 
     jwt.verify(req.token, 'secretkey', async (err, authData) => {
         if (err) {
-
             res.status(403)
             res.json({
-                message: "authrntication failed try to login "
+                message: "Authentication failed try to login "
             })
 
         } else {
-            await RoomModel.find().sort().populate('admins')
+            await QModel.find().sort().populate('User')
                 .then((data) => {
                     res.status(200);
                     res.json({
-                        rooms: data,
+                        Questions: data,
                     })
 
                 })
@@ -101,6 +102,7 @@ const getAllrooms = router.get('/', verifyToken, (req, res, next) => {
 
     })
 })
+
 
 
 function verifyToken(req, res, next) {
@@ -131,8 +133,8 @@ function verifyToken(req, res, next) {
 
 
 module.exports = {
-    getAllrooms,
-    CreateRoom,
-    UpdateRoom,
-    DeleteRoom
+    CreateQuestion,
+    UpdateQuestion,
+    DeleteQuestion,
+    getAllQuestions
 }

@@ -30,9 +30,7 @@ const UserSchema = new Schema({
         type : Schema.Types.ObjectId,
         required : true,
         ref : "Question"
-    }
-
-    ],
+    }],
 
 }, { timestamps: true } );
 

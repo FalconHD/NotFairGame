@@ -19,6 +19,16 @@ const RoomSchema = new Schema({
         required : true,
         ref : "User"  
     }],
+    groups : [{
+        type : Schema.Types.ObjectId,
+        required : true,
+        ref : "Group"  
+    }],
+    feedback : [{
+        type : Schema.Types.ObjectId,
+        required : true,
+        ref : "Feedback"  
+    }]
 }, { timestamps: true } );
 
 
